@@ -5,8 +5,6 @@ const PromoBanners = () => {
   return (
     <section className="py-20 bg-gradient-hero relative overflow-hidden">
       {/* Decorative blobs */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-primary-100 blob opacity-30 -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent-50 blob-2 opacity-20 translate-x-1/3 translate-y-1/3" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Video Experience Section */}
@@ -27,14 +25,18 @@ const PromoBanners = () => {
               </div>
             </div>
             {/* Floating badge */}
-            <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl p-4 shadow-card">
+            <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl p-4 shadow-card hover:shadow-card-hover transition-all duration-300 cursor-pointer group">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-gradient-green rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-green rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <Award className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="font-heading text-dark text-sm">Premium</p>
-                  <p className="text-gray-500 text-xs">Quality Assured</p>
+                  <p className="font-heading text-dark text-sm transition-colors duration-300 group-hover:text-primary">
+                    Premium
+                  </p>
+                  <p className="text-gray-500 text-xs transition-colors duration-300 group-hover:text-gray-700">
+                    Quality Assured
+                  </p>
                 </div>
               </div>
             </div>
@@ -62,11 +64,16 @@ const PromoBanners = () => {
                 { icon: Shield, text: "Scientifically Proven Formula" },
                 { icon: Award, text: "Lab Tested & Certified" },
               ].map((item, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center">
+                <div
+                  key={index}
+                  className="flex items-center gap-3 group cursor-pointer"
+                >
+                  <div className="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:bg-primary-100 group-hover:scale-110">
                     <item.icon className="w-5 h-5 text-primary" />
                   </div>
-                  <span className="text-dark font-medium">{item.text}</span>
+                  <span className="text-dark font-medium transition-colors duration-300 group-hover:text-primary">
+                    {item.text}
+                  </span>
                 </div>
               ))}
             </div>
@@ -96,11 +103,11 @@ const PromoBanners = () => {
             </div>
           </div>
 
-          <div className="text-center md:text-left max-w-md">
-            <h3 className="font-heading text-2xl text-dark mb-2">
+          <div className="text-center md:text-left max-w-md group cursor-pointer">
+            <h3 className="font-heading text-2xl text-dark mb-2 transition-colors duration-300 group-hover:text-primary">
               MuscleUp's TEST BOOST MAX is Guaranteed
             </h3>
-            <p className="text-gray-500">
+            <p className="text-gray-500 transition-colors duration-300 group-hover:text-gray-700">
               Help You Increase Your Testosterone Levels Because It Is Packed
               with 8-Potent Libido and Testosterone Boosting Ingredients.
             </p>

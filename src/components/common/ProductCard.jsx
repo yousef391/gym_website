@@ -49,7 +49,7 @@ const ProductCard = ({ product, index }) => {
             >
               <ShoppingCart className="w-5 h-5" />
             </button>
-            <button className="w-12 h-12 bg-white text-dark rounded-full flex items-center justify-center shadow-card transform translate-y-4 group-hover:translate-y-0 duration-300 delay-75 hover:scale-110 transition-transform">
+            <button className="w-12 h-12 bg-white text-dark hover:text-primary rounded-full flex items-center justify-center shadow-card transform translate-y-4 group-hover:translate-y-0 duration-300 delay-75 hover:scale-110 transition-all">
               <Eye className="w-5 h-5" />
             </button>
           </div>

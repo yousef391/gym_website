@@ -1,4 +1,4 @@
-import { Truck, Award, Clock, RefreshCw, Shield, Leaf } from "lucide-react";
+import { Truck, Award, Shield, Leaf } from "lucide-react";
 import { benefits } from "../../data/products";
 
 const benefitData = [
@@ -12,8 +12,6 @@ const BenefitsBar = () => {
   return (
     <section className="bg-white py-16 relative overflow-hidden">
       {/* Decorative blob */}
-      <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary-50 blob opacity-50" />
-      <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-accent-50 blob-2 opacity-40" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
@@ -22,15 +20,17 @@ const BenefitsBar = () => {
             return (
               <div
                 key={index}
-                className="bg-cream-light rounded-2xl p-6 hover-lift group"
+                className="bg-cream-light rounded-2xl p-6 hover-lift group cursor-pointer"
               >
                 <div className="w-14 h-14 bg-gradient-green rounded-xl flex items-center justify-center mb-4 group-hover:shadow-green transition-shadow">
                   <Icon className="w-7 h-7 text-white" />
                 </div>
-                <h3 className="font-heading text-dark text-lg mb-2">
+                <h3 className="font-heading text-dark text-lg mb-2 transition-colors duration-300 group-hover:text-primary">
                   {benefit.title}
                 </h3>
-                <p className="text-gray-500 text-sm">{benefit.desc}</p>
+                <p className="text-gray-500 text-sm transition-colors duration-300 group-hover:text-gray-700">
+                  {benefit.desc}
+                </p>
               </div>
             );
           })}

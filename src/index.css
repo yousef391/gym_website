@@ -28,9 +28,115 @@ html {
 
 body {
   font-family: "Inter", sans-serif;
-  background-color: #f5f1e8;
+  background-color: #ffffff;
   color: #1a1a1a;
   overflow-x: hidden;
+}
+
+/* Energetic heading font - Teko with italic */
+.font-heading {
+  font-family: "Teko", sans-serif;
+  letter-spacing: 0.03em;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+/* Make all h1-h6 headings italic */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-style: italic;
+}
+
+/* Global text hover transitions */
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label,
+li,
+a {
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Interactive text elements - hover to primary green */
+p:hover,
+span:hover,
+h3:hover,
+h4:hover,
+h5:hover,
+h6:hover,
+li:hover,
+label:hover {
+  color: #4caf50;
+}
+
+/* Links hover to primary */
+a:hover {
+  color: #4caf50;
+}
+
+/* Group hover support - when parent has group class */
+.group:hover p,
+.group:hover span,
+.group:hover h3,
+.group:hover h4,
+.group:hover h5,
+.group:hover h6 {
+  color: #4caf50;
+}
+
+/* Exclude elements that should keep their color */
+.text-white:hover,
+.gradient-text:hover,
+[class*="text-white"]:hover,
+button span:hover,
+a span:hover {
+  color: inherit;
+}
+
+/* Global button with left-to-right sweep transition */
+button,
+a[class*="btn"],
+a[class*="bg-gradient"],
+[class*="rounded-full"][class*="bg-"] {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: color 0.4s ease-in-out;
+}
+
+button::before,
+a[class*="btn"]::before,
+a[class*="bg-gradient"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  z-index: -1;
+  transition: left 0.4s ease-in-out;
+}
+
+button:hover::before,
+a[class*="btn"]:hover::before,
+a[class*="bg-gradient"]:hover::before {
+  left: 0;
+}
+
+button:hover,
+a[class*="btn"]:hover,
+a[class*="bg-gradient"]:hover {
+  color: #ffffff !important;
 }
 
 /* Custom scrollbar */
@@ -39,7 +145,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f5f1e8;
+  background: #ffffff;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -64,8 +170,11 @@ body {
   }
 
   .font-heading {
-    font-family: "Poppins", sans-serif;
-    font-weight: 700;
+    font-family: "Teko", sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    font-style: italic;
+    text-transform: uppercase;
   }
 
   /* Organic blob shapes */
@@ -177,6 +286,22 @@ body {
 
 .float-rotate {
   animation: float-rotate 6s ease-in-out infinite;
+}
+
+/* Fade in animation for dropdowns */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
 }
 
 /* Smooth transitions */

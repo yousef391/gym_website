@@ -82,8 +82,8 @@ const HeroSection = () => {
 
             {/* Feature cards */}
             <div className="grid grid-cols-2 gap-4 pt-8">
-              <div className="bg-white rounded-2xl p-5 shadow-soft hover-lift">
-                <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center mb-3">
+              <div className="bg-white rounded-2xl p-5 shadow-soft hover-lift group cursor-pointer">
+                <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center mb-3 transition-all duration-300 group-hover:bg-primary-100">
                   <svg
                     className="w-6 h-6 text-primary"
                     fill="none"
@@ -98,17 +98,17 @@ const HeroSection = () => {
                     />
                   </svg>
                 </div>
-                <h3 className="font-heading text-dark mb-1">
+                <h3 className="font-heading text-dark mb-1 transition-colors duration-300 group-hover:text-primary">
                   Dietary Supplement
                 </h3>
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 text-sm transition-colors duration-300 group-hover:text-gray-700">
                   Fish Oil Softgels are dietary supplements designed to support
                   heart health.
                 </p>
               </div>
 
-              <div className="bg-white rounded-2xl p-5 shadow-soft hover-lift">
-                <div className="w-12 h-12 bg-accent-50 rounded-xl flex items-center justify-center mb-3">
+              <div className="bg-white rounded-2xl p-5 shadow-soft hover-lift group cursor-pointer">
+                <div className="w-12 h-12 bg-accent-50 rounded-xl flex items-center justify-center mb-3 transition-all duration-300 group-hover:bg-accent-100">
                   <svg
                     className="w-6 h-6 text-accent"
                     fill="none"
@@ -123,10 +123,10 @@ const HeroSection = () => {
                     />
                   </svg>
                 </div>
-                <h3 className="font-heading text-dark mb-1">
+                <h3 className="font-heading text-dark mb-1 transition-colors duration-300 group-hover:text-primary">
                   Nutrients Provide
                 </h3>
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 text-sm transition-colors duration-300 group-hover:text-gray-700">
                   Essential vitamins and minerals for optimal health and
                   performance.
                 </p>

@@ -41,7 +41,7 @@ export default {
         },
       },
       fontFamily: {
-        heading: ["Poppins", "sans-serif"],
+        heading: ["Teko", "sans-serif"],
         body: ["Inter", "sans-serif"],
       },
       fontSize: {

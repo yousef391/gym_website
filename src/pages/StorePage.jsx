@@ -59,7 +59,7 @@ const StorePage = () => {
                 className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 ${
                   selectedCategory === category.id
                     ? "bg-gradient-green text-white shadow-green"
-                    : "bg-white text-gray-600 hover:bg-primary-50"
+                    : "bg-white text-gray-600 hover:bg-primary-50 hover:text-primary"
                 }`}
               >
                 {category.name}
@@ -71,20 +71,20 @@ const StorePage = () => {
           <div className="flex gap-2">
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-3 rounded-xl transition-colors ${
+              className={`p-3 rounded-xl transition-all duration-300 ${
                 viewMode === "grid"
                   ? "bg-primary text-white"
-                  : "bg-white text-gray-600"
+                  : "bg-white text-gray-600 hover:text-primary hover:bg-primary-50"
               }`}
             >
               <Grid className="w-5 h-5" />
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={`p-3 rounded-xl transition-colors ${
+              className={`p-3 rounded-xl transition-all duration-300 ${
                 viewMode === "list"
                   ? "bg-primary text-white"
-                  : "bg-white text-gray-600"
+                  : "bg-white text-gray-600 hover:text-primary hover:bg-primary-50"
               }`}
             >
               <List className="w-5 h-5" />

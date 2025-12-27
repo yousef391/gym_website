@@ -5,14 +5,16 @@ import FeaturedProducts from "../components/landing/FeaturedProducts";
 import PromoBanners from "../components/landing/PromoBanners";
 import TestimonialsSection from "../components/landing/TestimonialsSection";
 import CTASection from "../components/landing/CTASection";
+import { FeatureAdvantages } from "../components/ui/FeatureAdvantages";
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-white">
       <HeroSection />
-      <BenefitsBar />
+      <FeatureAdvantages />
       <CategoriesSection />
       <FeaturedProducts />
+
       <PromoBanners />
       <TestimonialsSection />
       <CTASection />

@@ -8,10 +8,8 @@ const FeaturedProducts = () => {
   const featuredProducts = products.slice(0, 4);
 
   return (
-    <section className="py-20 bg-cream relative overflow-hidden">
+    <section className="py-20 bg-white relative overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute top-10 right-10 w-64 h-64 bg-primary-100 blob opacity-30 animate-blob" />
-      <div className="absolute bottom-20 left-10 w-48 h-48 bg-accent-50 blob-2 opacity-20" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
