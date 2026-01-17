@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { categories } from "../../data/products";
+import { useStore } from "../../context/StoreContext";
 
 // Use local images for categories (match file names in images folder)
 const categoryImages = {
@@ -8,11 +8,20 @@ const categoryImages = {
   "pre-workout": "/images/pre-workout.png",
   creatine: "/images/creatine.png",
   amino: "/images/amino.png",
-  "fat-burner": "/images/kk.png", // No specific image, using kk.png as placeholder
+  "fat-burner": "/images/kk.png",
   vitamins: "/images/vitamins.png",
 };
 
 const CategoriesSection = () => {
+  const { categories } = useStore();
+
+  if (!categories || categories.length === 0) return null;
+
+  const getImage = (name) => {
+    const key = name.toLowerCase().replace(/\s+/g, '-');
+    return categoryImages[key] || categoryImages["all"];
+  };
+
   return (
     <section className="py-16 bg-white relative overflow-hidden">
       {/* Background pattern */}
@@ -44,7 +53,7 @@ const CategoriesSection = () => {
                 style={{ perspective: "1000px" }}
               >
                 <img
-                  src={categoryImages[category.id] || categoryImages["all"]}
+                  src={getImage(category.name)}
                   alt={category.name}
                   className="w-32 h-32 object-contain category-3d-img"
                   style={{

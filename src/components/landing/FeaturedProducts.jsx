@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
-import { products } from "../../data/products";
+import { useStore } from "../../context/StoreContext";
 import ProductCard from "../common/ProductCard";
 
 const FeaturedProducts = () => {
+  const { products } = useStore();
+  
+  if (!products || products.length === 0) return null;
+
   // Get first 4 products as featured
   const featuredProducts = products.slice(0, 4);
 
