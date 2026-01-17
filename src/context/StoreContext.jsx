@@ -46,8 +46,8 @@ export const StoreProvider = ({ children }) => {
     if (storeSlug) {
       fetchStoreBySlug(storeSlug);
     } else {
-      // Default: fetch first store for demo
-      fetchFirstStore();
+      // No store selected - general platform view
+      setLoading(false);
     }
   }, []);
 
