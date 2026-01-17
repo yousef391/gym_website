@@ -62,21 +62,21 @@ export const AuthProvider = ({ children }) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          store_name: storeName,
+          store_slug: storeSlug,
+        },
+      },
     });
 
     if (error) throw error;
-
-    // Create store for the new user
-    if (data.user) {
-      const { error: storeError } = await supabase
-        .from('stores')
-        .insert({
-          user_id: data.user.id,
-          name: storeName,
-          slug: storeSlug,
-        });
-
-      if (storeError) throw storeError;
+    
+    // Store creation is handled by Database Trigger on auth.users
+    if (data.user && !data.session) {
+      // Email confirmation required case
+      console.log('User created, waiting for confirmation');
+    } else if (data.user) {
       await fetchStore(data.user.id);
     }
 
