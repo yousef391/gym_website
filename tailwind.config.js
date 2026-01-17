@@ -4,6 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Dynamic theme colors (from store palette)
+        theme: {
+          primary: "var(--primary-color, #4CAF50)",
+          secondary: "var(--secondary-color, #34D399)",
+          accent: "var(--accent-color, #FF9800)",
+          background: "var(--background-color, #000000)",
+          text: "var(--text-color, #FFFFFF)",
+        },
         // Vibrant MuscleUp Palette
         primary: {
           DEFAULT: "#4CAF50",

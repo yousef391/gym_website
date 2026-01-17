@@ -11,11 +11,11 @@ const TestimonialsSection = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center mb-16">
-          <span className="inline-block px-4 py-2 bg-primary-50 text-primary font-medium rounded-full text-sm mb-4">
+          <span className="inline-block px-4 py-2 bg-primary-50 text-theme-primary font-medium rounded-full text-sm mb-4">
             Testimonials
           </span>
           <h2 className="font-heading text-4xl md:text-5xl text-dark mb-4">
-            What Our <span className="gradient-text">Customers</span> Say
+            What Our <span className="gradient-theme-text">Customers</span> Say
           </h2>
           <p className="text-gray-500 max-w-2xl mx-auto">
             Join thousands of satisfied customers who have improved their
@@ -32,7 +32,7 @@ const TestimonialsSection = () => {
               style={{ animationDelay: `${index * 150}ms` }}
             >
               {/* Quote icon */}
-              <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-green rounded-2xl flex items-center justify-center shadow-green">
+              <div className="absolute -top-4 -left-4 w-12 h-12 gradient-theme rounded-2xl flex items-center justify-center shadow-theme">
                 <Quote className="w-6 h-6 text-white" />
               </div>
 
@@ -67,9 +67,9 @@ const TestimonialsSection = () => {
         {/* Stats row */}
         <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8">
           {[
-            { value: "50K+", label: "Happy Customers", color: "text-primary" },
+            { value: "50K+", label: "Happy Customers", color: "text-theme-primary" },
             { value: "100+", label: "Products", color: "text-accent" },
-            { value: "4.9", label: "Average Rating", color: "text-primary" },
+            { value: "4.9", label: "Average Rating", color: "text-theme-primary" },
             { value: "24/7", label: "Support", color: "text-accent" },
           ].map((stat, index) => (
             <div key={index} className="text-center group">

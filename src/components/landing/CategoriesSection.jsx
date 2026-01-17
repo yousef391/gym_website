@@ -22,7 +22,7 @@ const CategoriesSection = () => {
         {/* Section header */}
         <div className="text-center mb-12">
           <h2 className="font-heading text-4xl md:text-5xl text-dark mb-4">
-            Shop by <span className="gradient-text">Category</span>
+            Shop by <span className="gradient-theme-text">Category</span>
           </h2>
           <p className="text-gray-500 max-w-2xl mx-auto">
             Find exactly what you need to support your fitness journey
@@ -62,7 +62,7 @@ const CategoriesSection = () => {
                 />
               </div>
               {/* Label only */}
-              <span className="font-semibold text-dark text-lg group-hover:text-primary transition-colors drop-shadow-sm mt-2">
+              <span className="font-semibold text-dark text-lg group-hover:text-theme-primary transition-colors drop-shadow-sm mt-2">
                 {category.name}
               </span>
             </Link>

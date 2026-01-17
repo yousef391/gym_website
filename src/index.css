@@ -99,6 +99,77 @@ body {
     background-clip: text;
   }
 
+  /* Dynamic theme gradient (uses store colors) */
+  .gradient-theme {
+    background: linear-gradient(
+      135deg,
+      var(--primary-color, #4caf50) 0%,
+      var(--secondary-color, #34d399) 100%
+    );
+  }
+
+  .gradient-theme-text {
+    background: linear-gradient(
+      135deg,
+      var(--primary-color, #4caf50) 0%,
+      var(--secondary-color, #34d399) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-theme-primary {
+    background-color: var(--primary-color, #4caf50);
+  }
+
+  .bg-theme-secondary {
+    background-color: var(--secondary-color, #34d399);
+  }
+
+  .bg-theme-accent {
+    background-color: var(--accent-color, #ff9800);
+  }
+
+  .text-theme-primary {
+    color: var(--primary-color, #4caf50);
+  }
+
+  .text-theme-secondary {
+    color: var(--secondary-color, #34d399);
+  }
+
+  .border-theme-primary {
+    border-color: var(--primary-color, #4caf50);
+  }
+
+  /* Accent gradient for buttons */
+  .gradient-theme-accent {
+    background: linear-gradient(
+      135deg,
+      var(--accent-color, #ff9800) 0%,
+      var(--secondary-color, #f57c00) 100%
+    );
+  }
+
+  .shadow-theme-accent {
+    box-shadow: 0 8px 25px color-mix(in srgb, var(--accent-color, #ff9800) 35%, transparent);
+  }
+
+  /* Light theme background for decorative elements */
+  .bg-theme-primary-light {
+    background-color: color-mix(in srgb, var(--primary-color, #4caf50) 20%, white);
+  }
+
+  .text-theme-accent {
+    color: var(--accent-color, #ff9800);
+  }
+
+  .shadow-theme {
+    box-shadow: 0 8px 25px
+      color-mix(in srgb, var(--primary-color, #4caf50) 35%, transparent);
+  }
+
   /* Card styles */
   .card-elevated {
     background: #ffffff;

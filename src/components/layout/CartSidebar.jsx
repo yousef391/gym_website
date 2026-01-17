@@ -1,4 +1,5 @@
 import { X, Plus, Minus, ShoppingBag, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 
 const CartSidebar = () => {
@@ -29,7 +30,7 @@ const CartSidebar = () => {
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 bg-gradient-green">
+          <div className="flex items-center justify-between p-6 gradient-theme">
             <div className="flex items-center space-x-3">
               <ShoppingBag className="w-6 h-6 text-white" />
               <h2 className="font-heading text-xl tracking-wide text-white">
@@ -49,7 +50,7 @@ const CartSidebar = () => {
             {cartItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center">
                 <div className="w-20 h-20 bg-primary-50 rounded-full flex items-center justify-center mb-4">
-                  <ShoppingBag className="w-10 h-10 text-primary" />
+                  <ShoppingBag className="w-10 h-10 text-theme-primary" />
                 </div>
                 <p className="text-dark text-lg mb-2 font-heading">
                   Your cart is empty
@@ -73,7 +74,7 @@ const CartSidebar = () => {
                     <h3 className="font-heading text-sm text-dark mb-1">
                       {item.name}
                     </h3>
-                    <p className="text-primary font-bold">
+                    <p className="text-theme-primary font-bold">
                       ${item.price.toFixed(2)}
                     </p>
 
@@ -83,7 +84,7 @@ const CartSidebar = () => {
                           onClick={() =>
                             updateQuantity(item.id, item.quantity - 1)
                           }
-                          className="w-8 h-8 flex items-center justify-center bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors text-primary"
+                          className="w-8 h-8 flex items-center justify-center bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors text-theme-primary"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
@@ -94,7 +95,7 @@ const CartSidebar = () => {
                           onClick={() =>
                             updateQuantity(item.id, item.quantity + 1)
                           }
-                          className="w-8 h-8 flex items-center justify-center bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors text-primary"
+                          className="w-8 h-8 flex items-center justify-center bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors text-theme-primary"
                         >
                           <Plus className="w-4 h-4" />
                         </button>
@@ -121,9 +122,13 @@ const CartSidebar = () => {
                   ${cartTotal.toFixed(2)}
                 </span>
               </div>
-              <button className="w-full py-4 bg-gradient-orange text-white font-heading text-lg rounded-full shadow-orange hover:shadow-lg transition-all duration-300 btn-press">
+              <Link 
+                to="/checkout"
+                onClick={() => setIsCartOpen(false)}
+                className="w-full py-4 gradient-theme-accent text-white font-heading text-lg rounded-full shadow-theme-accent hover:shadow-lg transition-all duration-300 btn-press text-center block"
+              >
                 Checkout
-              </button>
+              </Link>
               <p className="text-center text-gray-500 text-sm">
                 Shipping & taxes calculated at checkout
               </p>

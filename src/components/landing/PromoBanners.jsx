@@ -21,7 +21,7 @@ const PromoBanners = () => {
               />
               {/* Play button overlay */}
               <div className="absolute inset-0 bg-dark/30 flex items-center justify-center">
-                <button className="w-20 h-20 bg-gradient-orange rounded-full flex items-center justify-center shadow-orange hover:scale-110 transition-transform duration-300">
+                <button className="w-20 h-20 gradient-theme-accent rounded-full flex items-center justify-center shadow-theme-accent hover:scale-110 transition-transform duration-300">
                   <Play className="w-8 h-8 text-white fill-white ml-1" />
                 </button>
               </div>
@@ -29,7 +29,7 @@ const PromoBanners = () => {
             {/* Floating badge */}
             <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl p-4 shadow-card">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-gradient-green rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 gradient-theme rounded-full flex items-center justify-center">
                   <Award className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -42,13 +42,13 @@ const PromoBanners = () => {
 
           {/* Content */}
           <div className="space-y-6">
-            <span className="inline-block px-4 py-2 bg-primary-50 text-primary font-medium rounded-full text-sm">
+            <span className="inline-block px-4 py-2 bg-primary-50 text-theme-primary font-medium rounded-full text-sm">
               Experience with MuscleUp
             </span>
             <h2 className="font-heading text-4xl md:text-5xl text-dark leading-tight">
               Awesome Experience
               <br />
-              with <span className="gradient-text">MuscleUp</span>
+              with <span className="gradient-theme-text">MuscleUp</span>
             </h2>
             <p className="text-gray-500 text-lg">
               Fish Oil Softgels are dietary supplements designed to support
@@ -64,7 +64,7 @@ const PromoBanners = () => {
               ].map((item, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center">
-                    <item.icon className="w-5 h-5 text-primary" />
+                    <item.icon className="w-5 h-5 text-theme-primary" />
                   </div>
                   <span className="text-dark font-medium">{item.text}</span>
                 </div>
@@ -73,7 +73,7 @@ const PromoBanners = () => {
 
             <Link
               to="/store"
-              className="inline-flex items-center px-8 py-4 bg-gradient-orange text-white font-heading rounded-full shadow-orange hover:shadow-lg transition-all duration-300 btn-press"
+              className="inline-flex items-center px-8 py-4 gradient-theme-accent text-white font-heading rounded-full shadow-theme-accent hover:shadow-lg transition-all duration-300 btn-press"
             >
               Learn More
               <ArrowRight className="ml-2 w-5 h-5" />

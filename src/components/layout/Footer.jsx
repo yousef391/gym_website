@@ -9,8 +9,10 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
+import { useStore } from "../../context/StoreContext";
 
 const Footer = () => {
+  const { store } = useStore();
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
@@ -37,20 +39,20 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Youtube, href: "#", label: "YouTube" },
-  ];
+    { icon: Instagram, href: store?.instagram_url, label: "Instagram" },
+    { icon: Facebook, href: store?.facebook_url, label: "Facebook" },
+    { icon: Twitter, href: store?.twitter_url, label: "Twitter" },
+    { icon: Youtube, href: store?.youtube_url, label: "YouTube" },
+  ].filter(link => link.href);
 
   return (
     <footer className="bg-dark relative overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-primary/5 blob opacity-50" />
-      <div className="absolute bottom-0 right-0 w-48 h-48 bg-accent/5 blob-2 opacity-30" />
+      <div className="absolute top-0 left-0 w-64 h-64 bg-theme-primary/5 blob opacity-50" />
+      <div className="absolute bottom-0 right-0 w-48 h-48 bg-theme-accent/5 blob-2 opacity-30" />
 
       {/* Newsletter section */}
-      <div className="relative bg-gradient-green py-12">
+      <div className="relative gradient-theme py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
@@ -70,7 +72,7 @@ const Footer = () => {
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-gradient-orange text-white font-heading rounded-full shadow-orange hover:shadow-lg transition-all duration-300 btn-press"
+                className="px-6 py-3 bg-theme-accent text-white font-heading rounded-full hover:shadow-lg transition-all duration-300 btn-press"
               >
                 Subscribe
               </button>
@@ -85,11 +87,19 @@ const Footer = () => {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center space-x-2 mb-6">
-              <div className="w-12 h-12 bg-gradient-green rounded-2xl flex items-center justify-center">
-                <Dumbbell className="w-6 h-6 text-white" />
-              </div>
+              {store?.logo_url ? (
+                <img 
+                  src={`${store.logo_url}?t=${store.updated_at || ''}`} 
+                  alt={store.name} 
+                  className="w-12 h-12 rounded-2xl object-contain"
+                />
+              ) : (
+                <div className="w-12 h-12 gradient-theme rounded-2xl flex items-center justify-center">
+                  <Dumbbell className="w-6 h-6 text-white" />
+                </div>
+              )}
               <span className="font-heading text-2xl tracking-wide text-white">
-                MuscleUp
+                {store?.name || "MuscleUp"}
               </span>
             </Link>
             <p className="text-gray-400 mb-6 max-w-sm">
@@ -97,24 +107,30 @@ const Footer = () => {
               fitness. Fuel your body, elevate your performance.
             </p>
             <div className="space-y-3 text-gray-400">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center">
-                  <Mail className="w-4 h-4 text-primary" />
+              {store?.email && (
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-theme-primary/20 rounded-lg flex items-center justify-center">
+                    <Mail className="w-4 h-4 text-theme-primary" />
+                  </div>
+                  <span>{store.email}</span>
                 </div>
-                <span>support@muscleup.com</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center">
-                  <Phone className="w-4 h-4 text-primary" />
+              )}
+              {store?.phone && (
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-theme-primary/20 rounded-lg flex items-center justify-center">
+                    <Phone className="w-4 h-4 text-theme-primary" />
+                  </div>
+                  <span>{store.phone}</span>
                 </div>
-                <span>1-800-MUSCLEUP</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center">
-                  <MapPin className="w-4 h-4 text-primary" />
+              )}
+              {store?.address && (
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-theme-primary/20 rounded-lg flex items-center justify-center">
+                    <MapPin className="w-4 h-4 text-theme-primary" />
+                  </div>
+                  <span>{store.address}</span>
                 </div>
-                <span>Los Angeles, CA</span>
-              </div>
+              )}
             </div>
           </div>
 
@@ -128,7 +144,7 @@ const Footer = () => {
                 <li key={link.label}>
                   <Link
                     to={link.path}
-                    className="text-gray-400 hover:text-primary transition-colors"
+                    className="text-gray-400 hover:text-theme-primary transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -147,7 +163,7 @@ const Footer = () => {
                 <li key={link.label}>
                   <Link
                     to={link.path}
-                    className="text-gray-400 hover:text-primary transition-colors"
+                    className="text-gray-400 hover:text-theme-primary transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -166,7 +182,7 @@ const Footer = () => {
                 <li key={link.label}>
                   <Link
                     to={link.path}
-                    className="text-gray-400 hover:text-primary transition-colors"
+                    className="text-gray-400 hover:text-theme-primary transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -182,7 +198,7 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-gray-500 text-sm">
-              © {currentYear} MuscleUp. All rights reserved.
+              © {currentYear} {store?.name || "MuscleUp"}. All rights reserved.
             </p>
 
             {/* Social links */}
@@ -192,7 +208,7 @@ const Footer = () => {
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl text-gray-400 hover:bg-gradient-green hover:text-white transition-all duration-300"
+                  className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl text-gray-400 hover:bg-theme-primary hover:text-white transition-all duration-300"
                 >
                   <social.icon className="w-5 h-5" />
                 </a>

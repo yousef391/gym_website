@@ -11,7 +11,7 @@ import {
 
 const CTASection = () => {
   return (
-    <section className="py-24 bg-gradient-to-br from-primary via-primary-dark to-dark relative overflow-hidden">
+    <section className="py-24 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, var(--primary-color, #4caf50) 0%, var(--secondary-color, #388E3C) 50%, #1A1A1A 100%)' }}>
       {/* Decorative elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-white/5 blob" />
@@ -56,7 +56,7 @@ const CTASection = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             to="/store"
-            className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-orange text-white font-heading text-lg rounded-full shadow-orange hover:shadow-lg transition-all duration-300 btn-press"
+            className="group inline-flex items-center justify-center px-8 py-4 gradient-theme-accent text-white font-heading text-lg rounded-full shadow-theme-accent hover:shadow-lg transition-all duration-300 btn-press"
           >
             Browse Products
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />

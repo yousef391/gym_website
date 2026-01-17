@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ShoppingCart, Leaf } from "lucide-react";
 import { useCart } from "../../context/CartContext";
+import { useStore } from "../../context/StoreContext";
 import CartSidebar from "./CartSidebar";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cartCount, toggleCart } = useCart();
+  const { store } = useStore();
   const location = useLocation();
 
   useEffect(() => {
@@ -21,7 +23,7 @@ const Header = () => {
   const navLinks = [
     { path: "/", label: "Home" },
     { path: "/store", label: "Store" },
-    { path: "/recommend", label: "News" },
+    { path: "/recommend", label: "Quiz" },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -37,12 +39,22 @@ const Header = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            {/* Logo */}
+            {/* Logo - Use store logo if available */}
             <Link to="/" className="flex items-center space-x-2 group">
-              <div className="w-10 h-10 bg-gradient-green rounded-xl flex items-center justify-center shadow-green">
-                <Leaf className="w-5 h-5 text-white" />
-              </div>
-              <span className="font-heading text-xl text-dark">MuscleUp</span>
+              {store?.logo_url ? (
+                <img 
+                  src={`${store.logo_url}?t=${store.updated_at || ''}`} 
+                  alt={store.name} 
+                  className="w-10 h-10 rounded-xl object-contain"
+                />
+              ) : (
+                <div className="w-10 h-10 gradient-theme rounded-xl flex items-center justify-center shadow-theme">
+                  <Leaf className="w-5 h-5 text-white" />
+                </div>
+              )}
+              <span className="font-heading text-xl text-dark">
+                {store?.name || "MuscleUp"}
+              </span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -53,13 +65,13 @@ const Header = () => {
                   to={link.path}
                   className={`text-sm font-medium transition-all duration-300 relative group hover:-translate-y-0.5 ${
                     isActive(link.path)
-                      ? "text-primary"
-                      : "text-dark hover:text-primary"
+                      ? "text-theme-primary"
+                      : "text-dark hover:text-theme-primary"
                   }`}
                 >
                   {link.label}
                   <span
-                    className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-green rounded-full transition-all duration-300 ${
+                    className={`absolute -bottom-1 left-0 h-0.5 gradient-theme rounded-full transition-all duration-300 ${
                       isActive(link.path) ? "w-full" : "w-0 group-hover:w-full"
                     }`}
                   />
@@ -72,11 +84,11 @@ const Header = () => {
               {/* Cart button */}
               <button
                 onClick={toggleCart}
-                className="relative p-2.5 text-dark hover:text-primary transition-all duration-300 hover:-translate-y-0.5"
+                className="relative p-2.5 text-dark hover:text-theme-primary transition-all duration-300 hover:-translate-y-0.5"
               >
                 <ShoppingCart className="w-5 h-5" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-orange text-white text-xs font-bold rounded-full flex items-center justify-center shadow-orange animate-bounce-slow">
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-theme-accent text-white text-xs font-bold rounded-full flex items-center justify-center animate-bounce-slow">
                     {cartCount}
                   </span>
                 )}
@@ -85,7 +97,7 @@ const Header = () => {
               {/* CTA Button */}
               <Link
                 to="/store"
-                className="hidden sm:flex items-center px-6 py-2.5 bg-gradient-green text-white text-sm font-heading rounded-full hover:shadow-green transition-all duration-300 btn-press hover:-translate-y-0.5"
+                className="hidden sm:flex items-center px-6 py-2.5 gradient-theme text-white text-sm font-heading rounded-full shadow-theme transition-all duration-300 btn-press hover:-translate-y-0.5"
               >
                 Order Now
               </Link>
@@ -93,7 +105,7 @@ const Header = () => {
               {/* Mobile menu button */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden p-2.5 text-dark hover:text-primary transition-colors rounded-lg hover:bg-primary-50"
+                className="lg:hidden p-2.5 text-dark hover:text-theme-primary transition-colors rounded-lg hover:bg-primary-50"
               >
                 {isMobileMenuOpen ? (
                   <X className="w-5 h-5" />
@@ -118,7 +130,7 @@ const Header = () => {
                 to={link.path}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={`text-base font-medium py-2 ${
-                  isActive(link.path) ? "text-primary" : "text-dark"
+                  isActive(link.path) ? "text-theme-primary" : "text-dark"
                 }`}
               >
                 {link.label}
@@ -127,7 +139,7 @@ const Header = () => {
             <Link
               to="/store"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="inline-flex items-center justify-center px-6 py-3 bg-gradient-green text-white font-heading rounded-full shadow-green transition-colors mt-2"
+              className="inline-flex items-center justify-center px-6 py-3 gradient-theme text-white font-heading rounded-full shadow-theme transition-colors mt-2"
             >
               Order Now
             </Link>
