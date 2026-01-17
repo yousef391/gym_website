@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { supabase } from '../../lib/supabaseClient';
-import { Package, FolderTree, TrendingUp, Users, Eye } from 'lucide-react';
+import { Package, FolderTree, TrendingUp, Users, Eye, DollarSign, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import RevenueChart from '../../components/admin/RevenueChart';
 
 const AdminDashboard = () => {
   const { store } = useAuth();
@@ -10,7 +11,10 @@ const AdminDashboard = () => {
     products: 0,
     categories: 0,
     recommendations: 0,
+    orders: 0,
+    revenue: 0,
   });
+  const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,17 +25,52 @@ const AdminDashboard = () => {
 
   const fetchStats = async () => {
     try {
+      // Fetch counts
       const [productsRes, categoriesRes, recommendationsRes] = await Promise.all([
         supabase.from('products').select('id', { count: 'exact' }).eq('store_id', store.id),
         supabase.from('categories').select('id', { count: 'exact' }).eq('store_id', store.id),
-        supabase.from('user_recommendations').select('id', { count: 'exact' }).eq('store_id', store.id),
+        supabase.from('user_recommendations').select('user_id', { count: 'exact' }).eq('store_id', store.id),
       ]);
+
+      // Fetch ORDERS for chart (last 7 days)
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      const { data: orders, error: ordersError } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('store_id', store.id)
+        .gte('created_at', sevenDaysAgo.toISOString())
+        .order('created_at', { ascending: true });
+        
+      if (ordersError) throw ordersError;
+
+      // Calculate Revenue & Aggregate for Chart
+      let totalRevenue = 0;
+      let totalOrders = orders.length; // Count of orders in last 7 days for "active" metric
+      
+      // We also want TOTAL ALL TIME orders/revenue maybe? For now just showing fetched.
+      // Better: Fetch ALL orders count separately if needed.
+      // Let's assume stats cards show All Time, and chart shows 7 days.
+      
+      const { count: allOrdersCount, data: allOrdersData } = await supabase
+        .from('orders')
+        .select('total_amount', { count: 'exact' })
+        .eq('store_id', store.id);
+
+      const allTimeRevenue = allOrdersData?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
+
+      const aggregatedData = processChartData(orders || []);
 
       setStats({
         products: productsRes.count || 0,
         categories: categoriesRes.count || 0,
         recommendations: recommendationsRes.count || 0,
+        orders: allOrdersCount || 0,
+        revenue: allTimeRevenue,
       });
+      setChartData(aggregatedData);
+
     } catch (err) {
       console.error('Error fetching stats:', err);
     } finally {
@@ -39,27 +78,53 @@ const AdminDashboard = () => {
     }
   };
 
+  const processChartData = (orders) => {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const today = new Date();
+    const last7Days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date();
+      d.setDate(today.getDate() - (6 - i));
+      return {
+        date: days[d.getDay()], // e.g. "Mon"
+        fullDate: d.toISOString().split('T')[0],
+        amount: 0,
+        orders: 0
+      };
+    });
+
+    orders.forEach(order => {
+      const orderDate = order.created_at.split('T')[0];
+      const dayStat = last7Days.find(d => d.fullDate === orderDate);
+      if (dayStat) {
+        dayStat.amount += (order.total_amount || 0);
+        dayStat.orders += 1;
+      }
+    });
+
+    return last7Days;
+  };
+
   const statCards = [
+    {
+      title: 'Total Revenue',
+      value: `${stats.revenue.toLocaleString()} DZD`,
+      icon: DollarSign,
+      color: 'from-emerald-500 to-teal-400',
+      link: '/admin/orders',
+    },
+    {
+      title: 'Total Orders',
+      value: stats.orders,
+      icon: ShoppingBag,
+      color: 'from-blue-500 to-blue-600',
+      link: '/admin/orders',
+    },
     {
       title: 'Products',
       value: stats.products,
       icon: Package,
-      color: 'from-blue-500 to-blue-600',
-      link: '/admin/products',
-    },
-    {
-      title: 'Categories',
-      value: stats.categories,
-      icon: FolderTree,
       color: 'from-purple-500 to-purple-600',
-      link: '/admin/categories',
-    },
-    {
-      title: 'Recommendations',
-      value: stats.recommendations,
-      icon: TrendingUp,
-      color: 'from-emerald-500 to-emerald-600',
-      link: null,
+      link: '/admin/products',
     },
   ];
 
@@ -70,7 +135,7 @@ const AdminDashboard = () => {
         <div>
           <h1 className="text-3xl font-bold text-white">Dashboard</h1>
           <p className="text-gray-400 mt-1">
-            Welcome back! Here's an overview of your store.
+            Overview for <span className="text-emerald-400 font-semibold">{store?.name}</span>
           </p>
         </div>
         <a
@@ -89,100 +154,55 @@ const AdminDashboard = () => {
         {statCards.map(({ title, value, icon: Icon, color, link }) => (
           <div
             key={title}
-            className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50"
+            className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50 relative overflow-hidden group"
           >
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-gray-400 text-sm font-medium">{title}</p>
-                <p className="text-4xl font-bold text-white mt-2">
-                  {loading ? '...' : value}
-                </p>
-              </div>
-              <div className={`w-12 h-12 bg-gradient-to-r ${color} rounded-xl flex items-center justify-center`}>
-                <Icon className="w-6 h-6 text-white" />
-              </div>
+            <div className={`absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity bg-gradient-to-br ${color} rounded-bl-3xl`}>
+               <Icon className="w-16 h-16 text-white" />
             </div>
-            {link && (
-              <Link
-                to={link}
-                className="inline-block mt-4 text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
-              >
-                Manage {title} →
-              </Link>
-            )}
+
+            <div className="relative z-10">
+              <p className="text-gray-400 text-sm font-medium mb-1">{title}</p>
+              <h3 className="text-3xl font-bold text-white tracking-tight">{loading ? '...' : value}</h3>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Quick Actions */}
-      <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50">
-        <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Link
-            to="/admin/products"
-            className="p-4 bg-gray-700/30 hover:bg-gray-700/50 rounded-xl text-center transition-colors"
-          >
-            <Package className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-            <p className="text-white font-medium">Add Product</p>
-          </Link>
-          <Link
-            to="/admin/categories"
-            className="p-4 bg-gray-700/30 hover:bg-gray-700/50 rounded-xl text-center transition-colors"
-          >
-            <FolderTree className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-            <p className="text-white font-medium">Add Category</p>
-          </Link>
-          <Link
-            to="/admin/settings"
-            className="p-4 bg-gray-700/30 hover:bg-gray-700/50 rounded-xl text-center transition-colors"
-          >
-            <TrendingUp className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-            <p className="text-white font-medium">Upload Logo</p>
-          </Link>
-          <a
-            href={`/?store=${store?.slug}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-4 bg-gray-700/30 hover:bg-gray-700/50 rounded-xl text-center transition-colors"
-          >
-            <Eye className="w-8 h-8 text-amber-400 mx-auto mb-2" />
-            <p className="text-white font-medium">Preview Store</p>
-          </a>
-        </div>
+      {/* Analytics Chart Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+         {/* Main Chart */}
+         <div className="lg:col-span-2 bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-emerald-400" />
+                Revenue <span className="text-xs font-normal text-gray-500 ml-2">(Last 7 Days)</span>
+              </h2>
+            </div>
+            
+            {!loading && <RevenueChart data={chartData} />}
+         </div>
+
+         {/* Quick Actions (Sidebar) */}
+         <div className="space-y-4">
+            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50">
+              <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
+              <div className="space-y-3">
+                <Link to="/admin/products" className="block w-full text-center py-3 bg-gray-700/50 hover:bg-gray-700 text-gray-200 rounded-xl transition-colors text-sm font-medium">
+                  Add New Product
+                </Link>
+                <Link to="/admin/orders" className="block w-full text-center py-3 bg-gray-700/50 hover:bg-gray-700 text-gray-200 rounded-xl transition-colors text-sm font-medium">
+                  View Recent Orders
+                </Link>
+                <Link to="/admin/settings" className="block w-full text-center py-3 bg-gray-700/50 hover:bg-gray-700 text-gray-200 rounded-xl transition-colors text-sm font-medium">
+                  Store Settings
+                </Link>
+              </div>
+            </div>
+         </div>
       </div>
 
-      {/* Store Info */}
-      <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50">
-        <h2 className="text-xl font-semibold text-white mb-4">Store Information</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <p className="text-gray-400 text-sm">Store Name</p>
-            <p className="text-white font-medium">{store?.name}</p>
-          </div>
-          <div>
-            <p className="text-gray-400 text-sm">Store URL</p>
-            <p className="text-emerald-400 font-medium">
-              {window.location.origin}/?store={store?.slug}
-            </p>
-          </div>
-          <div>
-            <p className="text-gray-400 text-sm">Primary Color</p>
-            <div className="flex items-center gap-2 mt-1">
-              <div
-                className="w-6 h-6 rounded-md border border-gray-600"
-                style={{ backgroundColor: store?.primary_color }}
-              />
-              <p className="text-white font-mono">{store?.primary_color}</p>
-            </div>
-          </div>
-          <div>
-            <p className="text-gray-400 text-sm">Created</p>
-            <p className="text-white font-medium">
-              {store?.created_at && new Date(store.created_at).toLocaleDateString()}
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* Recent Activity / Recommendations (Simplified for now) */}
+      
     </div>
   );
 };
