@@ -190,7 +190,7 @@ const OrdersManager = () => {
                   {/* Order total & date */}
                   <div className="text-right">
                     <p className="text-xl font-bold text-emerald-400">
-                      ${Number(order.total_amount).toFixed(2)}
+                      {Number(order.total_amount).toFixed(2)} DZD
                     </p>
                     <p className="text-sm text-gray-500">
                       {new Date(order.created_at).toLocaleDateString()}
@@ -286,7 +286,7 @@ const OrdersManager = () => {
                         <p className="text-gray-400 text-sm">Qty: {item.quantity}</p>
                       </div>
                       <p className="text-emerald-400 font-medium">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {(item.price * item.quantity).toFixed(2)} DZD
                       </p>
                     </div>
                   ))}
@@ -297,7 +297,7 @@ const OrdersManager = () => {
               <div className="flex justify-between items-center pt-4 border-t border-gray-700">
                 <span className="text-gray-400">Total Amount</span>
                 <span className="text-2xl font-bold text-emerald-400">
-                  ${Number(selectedOrder.total_amount).toFixed(2)}
+                  {Number(selectedOrder.total_amount).toFixed(2)} DZD
                 </span>
               </div>
             </div>

@@ -74,11 +74,11 @@ const ProductCard = ({ product, index, onClick }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-heading text-lg md:text-2xl gradient-theme-text">
-              ${product.price?.toFixed(2) || '0.00'}
+              {product.price?.toFixed(2) || '0.00'} DZD
             </span>
             {product.originalPrice && (
               <span className="text-gray-400 line-through text-sm">
-                ${product.originalPrice.toFixed(2)}
+                {product.originalPrice.toFixed(2)} DZD
               </span>
             )}
           </div>

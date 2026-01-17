@@ -281,7 +281,7 @@ const CheckoutPage = () => {
                   />
                   <div className="flex-1 min-w-0">
                     <h3 className="font-medium text-dark truncate">{item.name}</h3>
-                    <p className="text-theme-primary font-heading">${item.price?.toFixed(2)}</p>
+                    <p className="text-theme-primary font-heading">{item.price?.toFixed(2)} DZD</p>
                     
                     {/* Quantity controls */}
                     <div className="flex items-center gap-2 mt-2">
@@ -314,7 +314,7 @@ const CheckoutPage = () => {
             <div className="border-t border-gray-100 pt-4 space-y-3">
               <div className="flex justify-between text-gray-600">
                 <span>Subtotal</span>
-                <span>${cartTotal.toFixed(2)}</span>
+                <span>{cartTotal.toFixed(2)} DZD</span>
               </div>
               <div className="flex justify-between text-gray-600">
                 <span>Shipping</span>
@@ -322,7 +322,7 @@ const CheckoutPage = () => {
               </div>
               <div className="flex justify-between text-xl font-heading text-dark pt-3 border-t border-gray-100">
                 <span>Total</span>
-                <span className="gradient-theme-text">${cartTotal.toFixed(2)}</span>
+                <span className="gradient-theme-text">{cartTotal.toFixed(2)} DZD</span>
               </div>
             </div>
           </div>

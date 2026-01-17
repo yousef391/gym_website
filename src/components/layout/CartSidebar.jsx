@@ -75,7 +75,7 @@ const CartSidebar = () => {
                       {item.name}
                     </h3>
                     <p className="text-theme-primary font-bold">
-                      ${item.price.toFixed(2)}
+                      {item.price.toFixed(2)} DZD
                     </p>
 
                     <div className="flex items-center justify-between mt-3">
@@ -119,7 +119,7 @@ const CartSidebar = () => {
               <div className="flex items-center justify-between text-lg">
                 <span className="text-gray-500">Subtotal:</span>
                 <span className="font-heading text-2xl text-dark">
-                  ${cartTotal.toFixed(2)}
+                  {cartTotal.toFixed(2)} DZD
                 </span>
               </div>
               <Link 
