@@ -13,60 +13,89 @@ const AdminDashboard = () => {
     recommendations: 0,
     orders: 0,
     revenue: 0,
+    revenueToday: 0,
+    revenueWeek: 0,
   });
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('week'); // 'week' | 'month'
+  // Keep track of the raw orders data for toggling chart without refetching
+  const [recentOrders, setRecentOrders] = useState([]);
 
   useEffect(() => {
     if (store) {
       fetchStats();
     }
-  }, [store, timeRange]);
+  }, [store]);
+
+  // Update chart when timeRange changes (using existing data if available)
+  useEffect(() => {
+    if (recentOrders.length > 0) {
+      const days = timeRange === 'week' ? 7 : 30;
+      setChartData(processChartData(recentOrders, days));
+    }
+  }, [timeRange, recentOrders]);
 
   const fetchStats = async () => {
     try {
       setLoading(true);
-      // Fetch counts
-      const [productsRes, categoriesRes, recommendationsRes] = await Promise.all([
+      // Fetch counts & All-time Revenue
+      const [productsRes, categoriesRes, recommendationsRes, allOrdersRes] = await Promise.all([
         supabase.from('products').select('id', { count: 'exact' }).eq('store_id', store.id),
         supabase.from('categories').select('id', { count: 'exact' }).eq('store_id', store.id),
         supabase.from('user_recommendations').select('user_id', { count: 'exact' }).eq('store_id', store.id),
+        supabase.from('orders').select('total_amount').eq('store_id', store.id) // Fetch amounts for total calculation
       ]);
 
-      // Fetch ORDERS for chart
-      const startDate = new Date();
-      const daysToSubtract = timeRange === 'week' ? 7 : 30;
-      startDate.setDate(startDate.getDate() - daysToSubtract);
+      // Calculate All-Time Revenue
+      const allTimeRevenue = allOrdersRes.data?.reduce((sum, o) => sum + (o.total_amount || 0), 0) || 0;
+      const totalOrdersCount = allOrdersRes.data?.length || 0;
+
+      // Fetch Recent Orders (Last 30 Days) for Cards & Chart
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
       const { data: orders, error: ordersError } = await supabase
         .from('orders')
         .select('*')
         .eq('store_id', store.id)
-        .gte('created_at', startDate.toISOString())
+        .gte('created_at', thirtyDaysAgo.toISOString())
         .order('created_at', { ascending: true });
         
       if (ordersError) throw ordersError;
-
-      // Calculate Revenue & Aggregate for Chart
       
-      const { count: allOrdersCount, data: allOrdersData } = await supabase
-        .from('orders')
-        .select('total_amount', { count: 'exact' })
-        .eq('store_id', store.id);
+      setRecentOrders(orders || []); // Save for chart toggling
 
-      const allTimeRevenue = allOrdersData?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
+      // Calculate Day/Week Stats
+      const todayStr = new Date().toISOString().split('T')[0];
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      
+      let revToday = 0;
+      let revWeek = 0;
 
-      const aggregatedData = processChartData(orders || [], daysToSubtract);
+      orders?.forEach(order => {
+         const orderDate = new Date(order.created_at);
+         const orderDateStr = orderDate.toISOString().split('T')[0];
+         
+         if (orderDateStr === todayStr) {
+            revToday += (order.total_amount || 0);
+         }
+         
+         if (orderDate >= sevenDaysAgo) {
+            revWeek += (order.total_amount || 0);
+         }
+      });
 
       setStats({
         products: productsRes.count || 0,
         categories: categoriesRes.count || 0,
         recommendations: recommendationsRes.count || 0,
-        orders: allOrdersCount || 0,
+        orders: totalOrdersCount,
         revenue: allTimeRevenue,
+        revenueToday: revToday,
+        revenueWeek: revWeek,
       });
-      setChartData(aggregatedData);
 
     } catch (err) {
       console.error('Error fetching stats:', err);
@@ -77,20 +106,26 @@ const AdminDashboard = () => {
 
   const processChartData = (orders, days) => {
     const today = new Date();
+    // Filter orders for the selected range ONLY for the chart
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+    
+    const filteredOrders = orders.filter(o => new Date(o.created_at) >= cutoffDate);
+
     const chartDays = Array.from({ length: days }, (_, i) => {
       const d = new Date();
       d.setDate(today.getDate() - (days - 1 - i));
-      const dayName = d.toLocaleDateString('en-US', { weekday: 'short' }); // Mon
-      const dayNum = d.getDate(); // 17
+      const dayName = d.toLocaleDateString('en-US', { weekday: 'short' }); 
+      const dayNum = d.getDate();
       return {
-        date: days > 7 ? `${dayNum} ${dayName}` : dayName, // "17 Mon" vs "Mon"
+        date: days > 7 ? `${dayNum} ${dayName}` : dayName,
         fullDate: d.toISOString().split('T')[0],
         amount: 0,
         orders: 0
       };
     });
 
-    orders.forEach(order => {
+    filteredOrders.forEach(order => {
       const orderDate = new Date(order.created_at).toISOString().split('T')[0];
       const dayStat = chartDays.find(d => d.fullDate === orderDate);
       if (dayStat) {
@@ -102,15 +137,68 @@ const AdminDashboard = () => {
     return chartDays;
   };
   
-  // ... statCards ...
+  const statCards = [
+    {
+      title: "Today's Revenue",
+      value: `${stats.revenueToday.toLocaleString()} DZD`,
+      icon: DollarSign,
+      color: 'from-emerald-500 to-emerald-600',
+      link: '/admin/orders',
+    },
+     {
+      title: "This Week's Revenue",
+      value: `${stats.revenueWeek.toLocaleString()} DZD`,
+      icon: TrendingUp,
+      color: 'from-teal-500 to-teal-600',
+      link: '/admin/orders',
+    },
+    {
+      title: 'Total Revenue',
+      value: `${stats.revenue.toLocaleString()} DZD`,
+      icon: DollarSign,
+      color: 'from-blue-500 to-blue-600',
+      link: '/admin/orders',
+    },
+    {
+      title: 'Total Orders',
+      value: stats.orders,
+      icon: ShoppingBag,
+      color: 'from-purple-500 to-purple-600',
+      link: '/admin/orders',
+    },
+  ];
 
   return (
     <div className="space-y-8">
       {/* Header */}
-      {/* ... header code ... */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+      </div>
 
       {/* Stats Grid */}
-      {/* ... stats grid code ... */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {statCards.map((card, index) => (
+          <Link
+            to={card.link}
+            key={index}
+            className={`relative p-6 rounded-2xl shadow-lg overflow-hidden bg-gradient-to-br ${card.color} transition-all duration-300 hover:scale-[1.02]`}
+          >
+            <div className="absolute top-4 right-4 text-white opacity-30">
+              <card.icon size={48} />
+            </div>
+            <p className="text-sm font-medium text-white text-opacity-80 mb-1">
+              {card.title}
+            </p>
+            <h3 className="text-3xl font-extrabold text-white">
+              {loading ? (
+                <div className="h-8 bg-white/20 rounded w-3/4 animate-pulse"></div>
+              ) : (
+                card.value
+              )}
+            </h3>
+          </Link>
+        ))}
+      </div>
 
       {/* Analytics Chart Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
